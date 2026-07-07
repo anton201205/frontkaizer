@@ -45,7 +45,7 @@ export class CartComponent implements OnInit {
     try {
       const p = await this.backend.getPerfil();
       if (p.direccion) this.direccion.set(p.direccion);
-      if (p.ciudad && SHIPPING_COSTS[p.ciudad] !== undefined) this.city.set(p.ciudad);
+      if (p.distrito && SHIPPING_COSTS[p.distrito] !== undefined) this.city.set(p.distrito);
       this.profileLoaded.set(true);
     } catch { this.profileLoaded.set(true); }
   }

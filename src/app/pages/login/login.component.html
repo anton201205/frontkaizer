@@ -46,24 +46,14 @@
     @if (tab() === 'register') {
       <form class="auth-form" (ngSubmit)="onRegister()">
 
-        <!-- Nombre y Apellidos -->
-        <div class="auth-row">
-          <div class="auth-field">
-            <label class="auth-label" for="regNombre">Nombre</label>
-            <input id="regNombre" class="auth-input" [class.input-error]="errors()['nombre']"
-              type="text" autocomplete="given-name" placeholder="Juan"
-              [(ngModel)]="regNombre" name="regNombre" />
-            @if (errors()['nombre']) { <p class="auth-error">{{ errors()['nombre'] }}</p> }
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="regApellidos">Apellidos</label>
-            <input id="regApellidos" class="auth-input" [class.input-error]="errors()['apellidos']"
-              type="text" autocomplete="family-name" placeholder="Pérez García"
-              [(ngModel)]="regApellidos" name="regApellidos" />
-            @if (errors()['apellidos']) { <p class="auth-error">{{ errors()['apellidos'] }}</p> }
-          </div>
-        </div>
+        <!-- Nombre -->
+<div class="auth-field">
+  <label class="auth-label" for="regNombre">Nombre</label>
+  <input id="regNombre" class="auth-input" [class.input-error]="errors()['nombre']"
+    type="text" autocomplete="name" placeholder="Juan Pérez"
+    [(ngModel)]="regNombre" name="regNombre" />
+  @if (errors()['nombre']) { <p class="auth-error">{{ errors()['nombre'] }}</p> }
+</div>
 
         <div class="auth-field">
           <label class="auth-label" for="regEmail">Email</label>

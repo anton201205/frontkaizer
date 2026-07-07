@@ -26,7 +26,6 @@ export class LoginComponent {
 
   // Register fields
   regNombre   = '';
-  regApellidos = '';
   regEmail    = '';
   regPassword = '';
 
@@ -39,7 +38,7 @@ export class LoginComponent {
     this.tab.set(t);
     this.error.set(null);
     this.errors.set({});
-    this.regNombre = ''; this.regApellidos = '';
+    this.regNombre = '';
   }
 
   async onLogin() {
@@ -64,7 +63,6 @@ export class LoginComponent {
   async onRegister() {
     const e: Record<string, string> = {};
     if (!this.regNombre.trim())      e['nombre']    = 'Nombre requerido';
-    if (!this.regApellidos.trim())   e['apellidos'] = 'Apellidos requeridos';
     if (!this.regEmail)              e['email']     = 'Email requerido';
     if (this.regPassword.length < 8) e['password']  = 'Mínimo 8 caracteres';
     if (Object.keys(e).length) { this.errors.set(e); return; }
@@ -73,9 +71,8 @@ export class LoginComponent {
     this.error.set(null);
     this.submitting.set(true);
     try {
-      await this.auth.register(this.regNombre, this.regApellidos, this.regEmail, this.regPassword);
-      const nombreCompleto = `${this.regNombre.trim()} ${this.regApellidos.trim()}`;
-      this.auth.setNombre(nombreCompleto);
+      await this.auth.register(this.regNombre, this.regEmail, this.regPassword);
+      this.auth.setNombre(this.regNombre.trim());
       void this.router.navigate(['/'], { replaceUrl: true });
     } catch {
       this.error.set('No se pudo crear la cuenta. Intenta con otro email.');

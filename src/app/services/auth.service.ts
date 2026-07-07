@@ -70,13 +70,13 @@ export class AuthService {
     this.applyToken(res.token);
   }
 
-  async register(nombre: string, apellidos: string, email: string, password: string): Promise<void> {
-    const res = await firstValueFrom(
-      this.http.post<LoginResponse>(`${this.getBaseUrl()}/api/auth/register`, { nombre, apellidos, email, password })
-    );
-    localStorage.setItem(this.TOKEN_KEY, res.token);
-    this.applyToken(res.token);
-  }
+async register(nombre: string, email: string, password: string): Promise<void> {
+  const res = await firstValueFrom(
+    this.http.post<LoginResponse>(`${this.getBaseUrl()}/api/auth/register`, { nombre, email, password })
+  );
+  localStorage.setItem(this.TOKEN_KEY, res.token);
+  this.applyToken(res.token);
+}
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);

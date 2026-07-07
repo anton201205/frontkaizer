@@ -9,6 +9,8 @@ interface ProductoRow {
   stock: number;
   image_url: string;
   descripcion: string;
+  categoria?: string;
+  especificaciones?: Record<string, string>;
   updated_at?: string;
 }
 
@@ -18,9 +20,10 @@ function mapRowToProduct(p: ProductoRow): Product {
     name: p.nombre,
     price: p.precio,
     imageUrl: p.image_url ?? '',
-    category: 'General',
+    category: p.categoria ?? 'General',
     description: p.descripcion,
     stock: p.stock,
+    specifications: p.especificaciones ?? {},
   };
 }
 
@@ -43,7 +46,7 @@ export class ProductService {
     this._error.set(null);
     const { data, error } = await this.supabase.client
       .from('productos')
-      .select('id,nombre,precio,stock,image_url,descripcion,updated_at')
+      .select('id,nombre,precio,stock,image_url,descripcion,categoria,especificaciones,updated_at')
       .order('nombre', { ascending: true });
 
     if (error) {
@@ -80,6 +83,8 @@ export class ProductService {
                 imageUrl: newRow.image_url ?? p.imageUrl,
                 description: newRow.descripcion ?? p.description,
                 stock: newRow.stock ?? p.stock,
+                category: newRow.categoria ?? p.category,
+                specifications: newRow.especificaciones ?? p.specifications,
               }
             );
           }
@@ -96,7 +101,7 @@ export class ProductService {
   async getById(id: number): Promise<Product | undefined> {
     const { data, error } = await this.supabase.client
       .from('productos')
-      .select('id,nombre,precio,stock,image_url,descripcion')
+      .select('id,nombre,precio,stock,image_url,descripcion,categoria,especificaciones')
       .eq('id', id)
       .maybeSingle();
 

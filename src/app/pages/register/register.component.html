@@ -18,22 +18,7 @@
           <p class="auth-error">Nombre requerido</p>
         }
       </div>
-      <div class="auth-field">
-        <label class="auth-label" for="apellidos">Apellidos</label>
-        <input
-          id="apellidos"
-          class="auth-input"
-          [class.input-error]="errors()['apellidos']"
-          type="text"
-          autocomplete="family-name"
-          placeholder="Pérez García"
-          [(ngModel)]="apellidos"
-          name="apellidos"
-        />
-        @if (errors()['apellidos']) {
-          <p class="auth-error">Apellidos requeridos</p>
-        }
-      </div>
+      <!-- ❌ Campo "apellidos" eliminado -->
       <div class="auth-field">
         <label class="auth-label" for="email">Email</label>
         <input

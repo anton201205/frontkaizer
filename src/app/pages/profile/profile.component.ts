@@ -45,11 +45,10 @@ export class ProfileComponent implements OnInit {
   private loadForm() {
     try {
       const s = localStorage.getItem(PROFILE_KEY);
-      const base = s ? JSON.parse(s) : { nombre: '', telefono: '', direccion: '', ciudad: 'Lima', docNumber: '' };
-      // Fallback: si no hay nombre en localStorage del perfil, usa el nombre del auth
+      const base = s ? JSON.parse(s) : { nombre: '', telefono: '', direccion: '', distrito: 'Lima', docNumber: '' };
       if (!base.nombre) base.nombre = this.auth.userNombre() ?? '';
       return base;
-    } catch { return { nombre: this.auth.userNombre() ?? '', telefono: '', direccion: '', ciudad: 'Lima', docNumber: '' }; }
+    } catch { return { nombre: this.auth.userNombre() ?? '', telefono: '', direccion: '', distrito: 'Lima', docNumber: '' }; }
   }
 
   ngOnInit() { this.loadPerfil(); }
@@ -57,10 +56,10 @@ export class ProfileComponent implements OnInit {
   private async loadPerfil() {
     try {
       const p = await this.backend.getPerfil();
-      this.form.nombre   = p.nombre   ?? '';
-      this.form.telefono = p.telefono ?? '';
+      this.form.nombre    = p.nombre    ?? '';
+      this.form.telefono  = p.telefono  ?? '';
       this.form.direccion = p.direccion ?? '';
-      this.form.ciudad   = p.ciudad   ?? 'Lima';
+      this.form.distrito  = p.distrito  ?? 'Lima';
       if (p.nombre) this.auth.setNombre(p.nombre);
     } catch { /* usa localStorage como fallback */ }
   }
@@ -90,7 +89,7 @@ export class ProfileComponent implements OnInit {
         nombre: this.form.nombre || undefined,
         telefono: this.form.telefono || undefined,
         direccion: this.form.direccion || undefined,
-        ciudad: this.form.ciudad || undefined,
+        distrito: this.form.distrito || undefined,
       });
       if (this.form.nombre) this.auth.setNombre(this.form.nombre);
       localStorage.setItem(PROFILE_KEY, JSON.stringify(this.form));

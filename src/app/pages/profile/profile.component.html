@@ -53,8 +53,8 @@
           <input type="tel" placeholder="999 000 111" [(ngModel)]="form.telefono" maxlength="20" />
         </div>
         <div class="prof-field">
-          <label>Ciudad</label>
-          <select [(ngModel)]="form.ciudad" class="prof-select">
+          <label>Distrito</label>
+          <select [(ngModel)]="form.distrito" class="prof-select">
             @for (c of cities; track c) { <option [value]="c">{{ c }}</option> }
           </select>
         </div>

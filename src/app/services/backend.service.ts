@@ -31,7 +31,7 @@ export interface ProfileRequest {
   nombre?: string;
   telefono?: string;
   direccion?: string;
-  ciudad?: string;
+  distrito?: string;
 }
 
 export interface ProfileResponse {
@@ -40,7 +40,8 @@ export interface ProfileResponse {
   nombre: string | null;
   telefono: string | null;
   direccion: string | null;
-  ciudad: string | null;
+  distrito: string | null;
+  dni: string | null;
 }
 
 export interface PedidoItemResponse {

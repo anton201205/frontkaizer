@@ -15,7 +15,6 @@ export class RegisterComponent {
   private auth = inject(AuthService);
 
   nombre = '';
-  apellidos = '';
   email = '';
   password = '';
   error = signal<string | null>(null);
@@ -25,7 +24,6 @@ export class RegisterComponent {
   async onSubmit() {
     const e: Record<string, boolean> = {};
     e['nombre'] = !this.nombre.trim();
-    e['apellidos'] = !this.apellidos.trim();
     e['email'] = !this.email;
     e['password'] = this.password.length < 8;
     this.errors.set(e);
@@ -34,7 +32,7 @@ export class RegisterComponent {
     this.error.set(null);
     this.submitting.set(true);
     try {
-      await this.auth.register(this.nombre, this.apellidos, this.email, this.password);
+      await this.auth.register(this.nombre, this.email, this.password);
       void this.router.navigate(['/'], { replaceUrl: true });
     } catch {
       this.error.set('No se pudo registrar el usuario');
