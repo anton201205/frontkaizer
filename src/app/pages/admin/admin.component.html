@@ -1,0 +1,233 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h2 class="admin-title">Panel de Administración</h2>
+      <p class="admin-subtitle">Gestión de catálogo y pedidos — Kaizer Tech</p>
+    </div>
+    <span class="admin-badge">ADMIN</span>
+  </div>
+
+  <!-- Tabs -->
+  <div class="admin-tabs">
+    <button class="admin-tab" [class.is-active]="tab() === 'catalog'" (click)="tab.set('catalog')">
+      <i class="fi fi-rs-box"></i> Catálogo
+      <span class="tab-count">{{ productService.products().length }}</span>
+    </button>
+    <button class="admin-tab" [class.is-active]="tab() === 'orders'" (click)="tab.set('orders')">
+      <i class="fi fi-rs-shopping-bag"></i> Pedidos
+      @if (orders().length > 0) {
+        <span class="tab-count">{{ orders().length }}</span>
+      }
+    </button>
+  </div>
+
+  <!-- ═══════════════════ TAB: CATÁLOGO ═══════════════════ -->
+  @if (tab() === 'catalog') {
+    <div class="admin-layout">
+      <div class="admin-form-col">
+        <h3 class="admin-section-title"><i class="fi fi-rs-add"></i> Nuevo producto</h3>
+
+        <div class="admin-form">
+          <div class="admin-field admin-field--full">
+            <label>Nombre del producto *</label>
+            <input type="text" placeholder="Ej: iPhone 16 Pro Max 256GB" [(ngModel)]="form.nombre" maxlength="200"
+              [class.has-error]="errors()['nombre']" />
+            @if (errors()['nombre']) { <span class="admin-error">{{ errors()['nombre'] }}</span> }
+          </div>
+
+          <div class="admin-field admin-field--full">
+            <label>Descripción *</label>
+            <textarea placeholder="Descripción detallada del producto..." [(ngModel)]="form.descripcion" maxlength="2000" rows="4"
+              [class.has-error]="errors()['descripcion']"></textarea>
+            @if (errors()['descripcion']) { <span class="admin-error">{{ errors()['descripcion'] }}</span> }
+          </div>
+
+          <div class="admin-field">
+            <label>Precio (S/) *</label>
+            <input type="number" min="0.01" step="0.01" placeholder="0.00" [(ngModel)]="form.precio"
+              [class.has-error]="errors()['precio']" />
+            @if (errors()['precio']) { <span class="admin-error">{{ errors()['precio'] }}</span> }
+          </div>
+
+          <div class="admin-field">
+            <label>Stock inicial *</label>
+            <input type="number" min="0" step="1" placeholder="0" [(ngModel)]="form.stock"
+              [class.has-error]="errors()['stock']" />
+            @if (errors()['stock']) { <span class="admin-error">{{ errors()['stock'] }}</span> }
+          </div>
+
+          <div class="admin-field admin-field--full">
+            <label>URL de imagen *</label>
+            <input type="url" placeholder="https://ejemplo.com/imagen.jpg" [(ngModel)]="form.imageUrl" maxlength="500"
+              [class.has-error]="errors()['imageUrl']" />
+            @if (errors()['imageUrl']) { <span class="admin-error">{{ errors()['imageUrl'] }}</span> }
+          </div>
+
+          @if (form.imageUrl) {
+            <div class="admin-img-preview">
+              <img [src]="form.imageUrl" alt="Vista previa" (error)="imgError($event)" />
+            </div>
+          }
+        </div>
+
+        @if (successMsg()) { <p class="admin-success-msg">{{ successMsg() }}</p> }
+
+        <button class="admin-submit-btn" [disabled]="saving()" (click)="handleSubmit()">
+          {{ saving() ? 'Creando…' : 'Crear producto' }}
+        </button>
+      </div>
+
+      <div class="admin-catalog-col">
+        <h3 class="admin-section-title">
+          <i class="fi fi-rs-list"></i> Catálogo actual
+          <span class="admin-count">{{ productService.products().length }}</span>
+        </h3>
+
+        @if (productService.loading()) {
+          <div class="admin-catalog-loading">
+            @for (s of skeletons; track $index) { <div class="admin-prod-skel"></div> }
+          </div>
+        } @else {
+          <div class="admin-catalog-list">
+            @for (p of productService.products(); track p.id) {
+              <div class="admin-prod-row">
+                <img [src]="p.imageUrl || fallback" [alt]="p.name" class="admin-prod-thumb" (error)="imgError($event)" />
+                <div class="admin-prod-info">
+                  <span class="admin-prod-name">{{ p.name }}</span>
+                  <span class="admin-prod-meta">S/ {{ p.price.toFixed(2) }} · Stock: {{ p.stock ?? 0 }}</span>
+                </div>
+                <span class="admin-stock-badge" [class.in-stock]="(p.stock ?? 0) > 0" [class.no-stock]="(p.stock ?? 0) <= 0">
+                  {{ (p.stock ?? 0) > 0 ? p.stock : 'Agotado' }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ═══════════════════ TAB: PEDIDOS ═══════════════════ -->
+  @if (tab() === 'orders') {
+    <div class="orders-section">
+
+      <!-- Stats chips -->
+      <div class="orders-stats">
+        @for (e of estados; track e) {
+          <button class="stat-chip" [class.is-active]="filterEstado() === e" (click)="filterEstado.set(e)">
+            <span class="stat-dot" [class]="'dot-' + e.toLowerCase()"></span>
+            {{ statusLabel[e] }}
+            <span class="stat-num">{{ countByEstado(e) }}</span>
+          </button>
+        }
+        <button class="stat-chip" [class.is-active]="filterEstado() === 'TODOS'" (click)="filterEstado.set('TODOS')">
+          Todos <span class="stat-num">{{ orders().length }}</span>
+        </button>
+      </div>
+
+      <!-- Loading -->
+      @if (ordersLoading()) {
+        <div class="orders-skel-list">
+          @for (s of orderSkeletons; track $index) { <div class="order-skel"></div> }
+        </div>
+      }
+
+      <!-- Error -->
+      @if (ordersError()) {
+        <div class="orders-error">
+          <i class="fi fi-rs-cross-circle"></i>
+          <p>{{ ordersError() }}</p>
+          <button (click)="loadOrders()">Reintentar</button>
+        </div>
+      }
+
+      <!-- Empty -->
+      @if (!ordersLoading() && !ordersError() && filteredOrders().length === 0) {
+        <div class="orders-empty">
+          <i class="fi fi-rs-shopping-bag"></i>
+          <p>No hay pedidos en este estado</p>
+        </div>
+      }
+
+      <!-- Orders list -->
+      @if (!ordersLoading() && filteredOrders().length > 0) {
+        <div class="orders-list">
+          @for (order of filteredOrders(); track order.id) {
+            <div class="order-card" [class.is-open]="expanded().has(order.id)">
+
+              <!-- Header row -->
+              <div class="order-card-head" (click)="toggleExpand(order.id)" role="button" tabindex="0" (keydown.enter)="toggleExpand(order.id)">
+                <div class="order-head-meta">
+                  <span class="order-num">#{{ padOrder(order.id) }}</span>
+                  <span class="order-client">
+                    <i class="fi fi-rs-user"></i>
+                    {{ order.nombreComprador || order.emailComprador || 'Cliente' }}
+                  </span>
+                  <span class="order-date"><i class="fi fi-rs-calendar"></i> {{ fmtDate(order.createdAt) }}</span>
+                </div>
+                <div class="order-head-right">
+                  <span class="order-total">S/ {{ (+order.total).toFixed(2) }}</span>
+                  <div class="order-estado-select" (click)="$event.stopPropagation()">
+                    <select [value]="order.estado" (change)="changeEstado(order, $any($event.target).value)"
+                      [disabled]="updatingId() === order.id"
+                      [class]="'estado-sel estado-' + order.estado.toLowerCase()">
+                      @for (e of estados; track e) {
+                        <option [value]="e">{{ statusLabel[e] }}</option>
+                      }
+                    </select>
+                    @if (updatingId() === order.id) {
+                      <span class="estado-spinner"></span>
+                    }
+                  </div>
+                  <span class="order-chevron" [class.rotated]="expanded().has(order.id)">
+                    <i class="fi fi-rs-angle-down"></i>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Detail -->
+              @if (expanded().has(order.id)) {
+                <div class="order-card-detail">
+                  @if (order.direccionEnvio) {
+                    <div class="order-delivery">
+                      <i class="fi fi-rs-truck-side"></i>
+                      <div>
+                        <span class="dl-label">Envío a</span>
+                        <span class="dl-addr">{{ order.direccionEnvio }}</span>
+                      </div>
+                    </div>
+                  }
+                  @if (order.emailComprador) {
+                    <div class="order-buyer-info">
+                      <i class="fi fi-rs-envelope"></i> {{ order.emailComprador }}
+                      @if (order.telefonoComprador) { &nbsp;·&nbsp; <i class="fi fi-rs-mobile-notch"></i> {{ order.telefonoComprador }} }
+                    </div>
+                  }
+                  <div class="order-items-table">
+                    <div class="order-items-head">
+                      <span>Producto</span><span class="ta-r">P. Unit.</span><span class="ta-r">Cant.</span><span class="ta-r">Subtotal</span>
+                    </div>
+                    @for (item of order.items; track item.productoId) {
+                      <div class="order-item-row">
+                        <span class="oi-name">{{ item.nombreProducto }}</span>
+                        <span class="ta-r oi-val">S/ {{ (+item.precioUnitario).toFixed(2) }}</span>
+                        <span class="ta-r oi-val">{{ item.cantidad }}</span>
+                        <span class="ta-r oi-val oi-sub">S/ {{ (+item.subtotal).toFixed(2) }}</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="order-total-footer">
+                    <span>Total</span>
+                    <strong>S/ {{ (+order.total).toFixed(2) }}</strong>
+                  </div>
+                </div>
+              }
+
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  }
+</div>

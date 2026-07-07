@@ -1,0 +1,68 @@
+<header class="main-header">
+  <div class="header-container">
+
+    <a routerLink="/" class="logo-link">
+      <h1 class="logo">Kaizer Tech</h1>
+    </a>
+
+    <div class="header-search">
+      <i class="fi fi-rs-search header-search-icon" aria-hidden="true"></i>
+      <input
+        type="search"
+        class="header-search-input"
+        placeholder="Buscar productos..."
+        [value]="searchQuery"
+        (input)="onSearchChange($any($event.target).value)"
+        aria-label="Buscar productos"
+      />
+    </div>
+
+    <div class="header-right">
+
+      @if (auth.isAuthenticated()) {
+        <div class="header-user-group">
+          <a routerLink="/profile" class="header-user-widget">
+            <i class="fi fi-rs-user header-widget-icon"></i>
+            <div class="header-widget-text">
+              <span class="header-widget-top">Hola, {{ displayName() }}</span>
+              <span class="header-widget-bottom">Mi Perfil</span>
+            </div>
+          </a>
+
+          <button
+            type="button"
+            class="header-logout-btn"
+            (click)="handleLogout()"
+            title="Cerrar Sesión"
+          >
+            <i class="fi fi-rs-sign-out-alt"></i>
+            <span>Salir</span>
+          </button>
+        </div>
+      } @else {
+        <a routerLink="/login" class="header-user-widget">
+          <i class="fi fi-rs-user header-widget-icon"></i>
+          <div class="header-widget-text">
+            <span class="header-widget-top">¡Bienvenido!</span>
+            <span class="header-widget-bottom">Ingresa / Regístrate</span>
+          </div>
+        </a>
+      }
+
+      <a
+        routerLink="/cart"
+        class="header-cart-widget"
+        [attr.aria-label]="'Carrito — ' + cart.cartCount() + ' ítems'"
+      >
+        <div class="header-cart-icon-wrap">
+          <i class="fi fi-rs-shopping-cart-add"></i>
+          @if (cart.cartCount() > 0) {
+            <span class="cart-badge">{{ cart.cartCount() > 99 ? '99+' : cart.cartCount() }}</span>
+          }
+        </div>
+        <span class="header-widget-bottom">Carrito</span>
+      </a>
+
+    </div>
+  </div>
+</header>

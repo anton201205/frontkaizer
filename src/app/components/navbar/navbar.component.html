@@ -1,0 +1,28 @@
+<nav class="navbar" aria-label="Principal">
+  <div class="navbar-container">
+    <ul class="nav-list">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+          Inicio
+        </a>
+      </li>
+      <li>
+        <a routerLink="/products" routerLinkActive="active" class="nav-link">
+          Productos
+        </a>
+      </li>
+      <li>
+        <a routerLink="/about" routerLinkActive="active" class="nav-link">
+          Sobre Nosotros
+        </a>
+      </li>
+      @if (auth.isAdmin()) {
+        <li>
+          <a routerLink="/admin" routerLinkActive="active" class="nav-link">
+            Admin
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</nav>

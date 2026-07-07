@@ -1,0 +1,97 @@
+<div class="auth-page">
+  <div class="auth-card">
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab" [class.active]="tab() === 'login'" (click)="setTab('login')">
+        Ingresar
+      </button>
+      <button class="auth-tab" [class.active]="tab() === 'register'" (click)="setTab('register')">
+        Crear cuenta
+      </button>
+    </div>
+
+    <!-- LOGIN -->
+    @if (tab() === 'login') {
+      <form class="auth-form" (ngSubmit)="onLogin()">
+        <div class="auth-field">
+          <label class="auth-label" for="loginEmail">Email</label>
+          <input id="loginEmail" class="auth-input" [class.input-error]="errors()['email']"
+            type="email" autocomplete="email" placeholder="tu@email.com"
+            [(ngModel)]="loginEmail" name="loginEmail" />
+          @if (errors()['email']) { <p class="auth-error">{{ errors()['email'] }}</p> }
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="loginPassword">Contraseña</label>
+          <input id="loginPassword" class="auth-input" [class.input-error]="errors()['password']"
+            type="password" autocomplete="current-password" placeholder="••••••••"
+            [(ngModel)]="loginPassword" name="loginPassword" />
+          @if (errors()['password']) { <p class="auth-error">{{ errors()['password'] }}</p> }
+        </div>
+
+        @if (error()) { <p class="auth-error form-error">{{ error() }}</p> }
+
+        <button class="auth-button" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+        <p class="auth-switch">
+          ¿No tienes cuenta?
+          <button type="button" class="auth-link" (click)="setTab('register')">Crear cuenta</button>
+        </p>
+      </form>
+    }
+
+    <!-- REGISTER -->
+    @if (tab() === 'register') {
+      <form class="auth-form" (ngSubmit)="onRegister()">
+
+        <!-- Nombre y Apellidos -->
+        <div class="auth-row">
+          <div class="auth-field">
+            <label class="auth-label" for="regNombre">Nombre</label>
+            <input id="regNombre" class="auth-input" [class.input-error]="errors()['nombre']"
+              type="text" autocomplete="given-name" placeholder="Juan"
+              [(ngModel)]="regNombre" name="regNombre" />
+            @if (errors()['nombre']) { <p class="auth-error">{{ errors()['nombre'] }}</p> }
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="regApellidos">Apellidos</label>
+            <input id="regApellidos" class="auth-input" [class.input-error]="errors()['apellidos']"
+              type="text" autocomplete="family-name" placeholder="Pérez García"
+              [(ngModel)]="regApellidos" name="regApellidos" />
+            @if (errors()['apellidos']) { <p class="auth-error">{{ errors()['apellidos'] }}</p> }
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="regEmail">Email</label>
+          <input id="regEmail" class="auth-input" [class.input-error]="errors()['email']"
+            type="email" autocomplete="email" placeholder="tu@email.com"
+            [(ngModel)]="regEmail" name="regEmail" />
+          @if (errors()['email']) { <p class="auth-error">{{ errors()['email'] }}</p> }
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="regPassword">Contraseña</label>
+          <input id="regPassword" class="auth-input" [class.input-error]="errors()['password']"
+            type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"
+            [(ngModel)]="regPassword" name="regPassword" />
+          @if (errors()['password']) { <p class="auth-error">{{ errors()['password'] }}</p> }
+        </div>
+
+        @if (error()) { <p class="auth-error form-error">{{ error() }}</p> }
+
+        <button class="auth-button" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Creando cuenta...' : 'Crear cuenta' }}
+        </button>
+        <p class="auth-switch">
+          ¿Ya tienes cuenta?
+          <button type="button" class="auth-link" (click)="setTab('login')">Ingresar</button>
+        </p>
+      </form>
+    }
+
+  </div>
+</div>

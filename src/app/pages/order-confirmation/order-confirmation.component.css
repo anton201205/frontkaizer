@@ -1,0 +1,81 @@
+.receipt-page { max-width: 760px; margin: 50px auto; padding: 0 20px 60px; }
+
+/* Toolbar */
+.receipt-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+.receipt-back-btn { background: transparent; border: 1px solid #333; color: #aaa; padding: 9px 18px; border-radius: 999px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+.receipt-back-btn:hover { border-color: #666; color: #fff; }
+.receipt-print-btn { background: #fff; color: #111; border: none; padding: 10px 22px; border-radius: 999px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+.receipt-print-btn:hover { background: #e0e0e0; }
+
+/* Document */
+.receipt-document { background: #111; border: 1px solid #1e1e1e; border-radius: 20px; padding: 40px; color: #ccc; }
+
+/* Top header */
+.receipt-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #1e1e1e; }
+.receipt-logo-row { display: flex; align-items: center; gap: 14px; }
+.receipt-logo-icon { width: 42px; height: 42px; background: #fff; color: #000; border-radius: 10px; font-size: 1.4rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.receipt-brand h1 { color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 3px; }
+.receipt-brand p { font-size: 0.78rem; color: #555; margin: 0; }
+.receipt-meta { text-align: right; }
+.receipt-type-badge { display: inline-block; background: #0d1f0d; border: 1px solid #1e4a1e; color: #5dbb5d; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; padding: 4px 10px; border-radius: 6px; margin-bottom: 8px; }
+.receipt-order-id { font-size: 1.05rem; font-weight: 800; color: #fff; margin: 0 0 4px; letter-spacing: 0.02em; }
+.receipt-date { font-size: 0.78rem; color: #555; margin: 0; }
+
+/* Address */
+.receipt-address-row { display: flex; align-items: center; gap: 8px; background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 10px; padding: 11px 16px; margin-bottom: 16px; font-size: 0.85rem; color: #888; }
+.receipt-address-row i { color: #4caf80; }
+.receipt-address-row strong { color: #ccc; }
+
+/* Payment row */
+.receipt-payment-row { display: flex; align-items: center; justify-content: space-between; background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 12px; padding: 14px 18px; margin-bottom: 28px; }
+.receipt-payment-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 4px; }
+.receipt-payment-method { display: flex; align-items: center; gap: 8px; }
+.receipt-payment-method strong { color: #fff; font-size: 0.95rem; }
+.pm-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pm-card { background: #5da3ff; }
+.pm-qr { background: #7b3fe4; }
+.receipt-paid-badge { display: flex; align-items: center; gap: 6px; background: #0d1f0d; border: 1px solid #1e4a1e; color: #5dbb5d; font-size: 0.78rem; font-weight: 700; padding: 6px 14px; border-radius: 999px; }
+
+/* Table */
+.receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; font-size: 0.88rem; }
+.receipt-table th { color: #444; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px 0; border-bottom: 1px solid #1e1e1e; text-align: left; font-weight: 700; }
+.receipt-table td { padding: 11px 0; border-bottom: 1px solid #161616; color: #ccc; }
+.product-name-cell { max-width: 320px; }
+.ta-r { text-align: right; }
+.mono { font-variant-numeric: tabular-nums; }
+
+/* Totals */
+.receipt-totals { display: flex; flex-direction: column; gap: 10px; max-width: 340px; margin-left: auto; padding: 18px 0 0; border-top: 1px solid #1e1e1e; }
+.receipt-total-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: #666; }
+.shipping-free { color: #4caf80 !important; font-weight: 700; }
+.receipt-grand { border-top: 1px solid #2a2a2a; padding-top: 12px; margin-top: 4px; }
+.receipt-grand strong { color: #fff; font-size: 1rem; }
+.grand-amount { font-size: 1.3rem !important; font-weight: 800 !important; }
+
+/* Footer */
+.receipt-footer { margin-top: 36px; padding-top: 22px; border-top: 1px dashed #1e1e1e; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.footer-thanks { color: #aaa; font-size: 0.9rem; margin: 0 0 6px; }
+.footer-thanks span { color: #fff; font-weight: 700; }
+.footer-contact { font-size: 0.78rem; color: #555; margin: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.footer-contact i { font-size: 0.75rem; }
+.receipt-footer-qr { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
+.receipt-footer-qr svg { border-radius: 6px; border: 1px solid #2a2a2a; }
+.footer-qr-label { font-size: 0.65rem; color: #444; letter-spacing: 0.05em; }
+
+/* Print */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .receipt-page { margin: 0; padding: 0; max-width: 100%; }
+  .receipt-document { background: #fff !important; border: none !important; border-radius: 0 !important; padding: 20px !important; color: #000 !important; }
+  .receipt-brand h1, .receipt-order-id, .receipt-payment-method strong, .receipt-grand strong { color: #000 !important; }
+  .receipt-table th { color: #333 !important; border-bottom: 1px solid #ccc !important; }
+  .receipt-table td { color: #000 !important; border-bottom: 1px solid #eee !important; }
+  .receipt-type-badge { background: #e8f5e8 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+  .receipt-paid-badge { background: #e8f5e8 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+  .receipt-payment-row, .receipt-address-row { background: #f9f9f9 !important; border-color: #ddd !important; }
+  .receipt-totals { border-top-color: #ccc !important; }
+  .receipt-grand { border-top-color: #999 !important; }
+  .receipt-footer { border-top-color: #ccc !important; }
+  .receipt-footer-qr svg { filter: invert(1); }
+}

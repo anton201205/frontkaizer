@@ -1,0 +1,267 @@
+<div class="ckout-container">
+
+  <div class="ckout-topbar">
+    <button class="ckout-back" (click)="router.navigate(['/cart'])">
+      <i class="fi fi-rs-arrow-left"></i> Volver al carrito
+    </button>
+    <h2 class="ckout-title">Finalizar compra</h2>
+  </div>
+
+  <div class="ckout-layout">
+
+    <!-- ─── Columna izquierda: formulario ─── -->
+    <div class="ckout-form-col">
+
+      <!-- Dirección de entrega -->
+      <section class="ckout-section">
+        <div class="ckout-section-head">
+          <span class="ckout-step">1</span>
+          <h3 class="ckout-section-title">Dirección de entrega</h3>
+        </div>
+        @if (!editingAddress()) {
+          <div class="ckout-address-confirmed">
+            <i class="fi fi-rs-marker address-icon"></i>
+            <div class="ckout-address-text">
+              <span class="ckout-address-main">{{ s.direccion }}</span>
+              <span class="ckout-address-city">{{ s.city }}</span>
+            </div>
+            <button type="button" class="ckout-address-edit" (click)="editingAddress.set(true)">
+              <i class="fi fi-rs-edit"></i> Cambiar
+            </button>
+          </div>
+        } @else {
+          <div class="ckout-address-form">
+            <input type="text" class="ckout-address-input"
+              placeholder="Ej: Av. Sol 123, Villa María del Triunfo"
+              [(ngModel)]="s.direccion" name="direccion" />
+            <button type="button" class="ckout-address-save" (click)="editingAddress.set(false)">
+              Confirmar
+            </button>
+          </div>
+        }
+      </section>
+
+      <!-- Método de pago -->
+      <section class="ckout-section">
+        <div class="ckout-section-head">
+          <span class="ckout-step">2</span>
+          <h3 class="ckout-section-title">Método de pago</h3>
+        </div>
+
+        <div class="ckout-method-tabs">
+          <button class="ckout-tab" [class.is-active]="method() === 'card'" (click)="setMethod('card')">
+            <i class="fi fi-rs-credit-card"></i>
+            <span>Tarjeta</span>
+            <small>Visa / Mastercard</small>
+          </button>
+          <button class="ckout-tab" [class.is-active]="method() === 'qr'" (click)="setMethod('qr')">
+            <i class="fi fi-rs-qr-scan"></i>
+            <span>Yape / Plin</span>
+            <small>Pago por QR</small>
+          </button>
+        </div>
+
+        @if (method() === 'card') {
+          <div class="ckout-card-form">
+            <div class="ckout-field">
+              <label>Número de tarjeta</label>
+              <div class="input-icon-wrap">
+                <i class="fi fi-rs-credit-card input-icon"></i>
+                <input type="text" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="16"
+                  [value]="cardNumber" (input)="onCardNumberInput($event)"
+                  [class.has-error]="errors()['cardNumber']" />
+              </div>
+              @if (errors()['cardNumber']) { <span class="field-error">{{ errors()['cardNumber'] }}</span> }
+            </div>
+            <div class="ckout-field">
+              <label>Titular de la tarjeta</label>
+              <input type="text" placeholder="Como aparece en la tarjeta" [(ngModel)]="cardName"
+                (input)="cardName = cardName.toUpperCase()" [class.has-error]="errors()['cardName']" />
+              @if (errors()['cardName']) { <span class="field-error">{{ errors()['cardName'] }}</span> }
+            </div>
+            <div class="ckout-row">
+              <div class="ckout-field">
+                <label>Vencimiento</label>
+                <input type="text" inputmode="numeric" placeholder="MM/AA" maxlength="5"
+                  [value]="expiry" (input)="onExpiryInput($event)" [class.has-error]="errors()['expiry']" />
+                @if (errors()['expiry']) { <span class="field-error">{{ errors()['expiry'] }}</span> }
+              </div>
+              <div class="ckout-field">
+                <label>CVV</label>
+                <div class="input-icon-wrap">
+                  <input type="text" inputmode="numeric" placeholder="•••" maxlength="3"
+                    [value]="cvv" (input)="onCvvInput($event)" [class.has-error]="errors()['cvv']" />
+                </div>
+                @if (errors()['cvv']) { <span class="field-error">{{ errors()['cvv'] }}</span> }
+              </div>
+            </div>
+            <p class="ckout-security-note"><i class="fi fi-rs-lock"></i> Tu pago está protegido con encriptación SSL</p>
+          </div>
+        }
+
+        @if (method() === 'qr') {
+          <div class="ckout-qr-section">
+            <div class="ckout-qr-card">
+              <div class="ckout-qr-mock">
+                <svg width="110" height="110" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+                  <rect width="21" height="21" fill="#050505"/>
+                  <!-- Finder TL -->
+                  <rect x="0" y="0" width="7" height="7" fill="#fff"/>
+                  <rect x="1" y="1" width="5" height="5" fill="#050505"/>
+                  <rect x="2" y="2" width="3" height="3" fill="#fff"/>
+                  <!-- Finder TR -->
+                  <rect x="14" y="0" width="7" height="7" fill="#fff"/>
+                  <rect x="15" y="1" width="5" height="5" fill="#050505"/>
+                  <rect x="16" y="2" width="3" height="3" fill="#fff"/>
+                  <!-- Finder BL -->
+                  <rect x="0" y="14" width="7" height="7" fill="#fff"/>
+                  <rect x="1" y="15" width="5" height="5" fill="#050505"/>
+                  <rect x="2" y="16" width="3" height="3" fill="#fff"/>
+                  <!-- Timing horizontal -->
+                  <rect x="8" y="6" width="1" height="1" fill="#fff"/>
+                  <rect x="10" y="6" width="1" height="1" fill="#fff"/>
+                  <rect x="12" y="6" width="1" height="1" fill="#fff"/>
+                  <!-- Timing vertical -->
+                  <rect x="6" y="8" width="1" height="1" fill="#fff"/>
+                  <rect x="6" y="10" width="1" height="1" fill="#fff"/>
+                  <rect x="6" y="12" width="1" height="1" fill="#fff"/>
+                  <!-- Data center -->
+                  <rect x="8" y="8" width="1" height="1" fill="#fff"/>
+                  <rect x="10" y="8" width="2" height="1" fill="#fff"/>
+                  <rect x="9" y="9" width="1" height="1" fill="#fff"/>
+                  <rect x="12" y="9" width="1" height="1" fill="#fff"/>
+                  <rect x="8" y="10" width="1" height="2" fill="#fff"/>
+                  <rect x="11" y="10" width="2" height="1" fill="#fff"/>
+                  <rect x="9" y="11" width="1" height="1" fill="#fff"/>
+                  <rect x="8" y="12" width="2" height="1" fill="#fff"/>
+                  <rect x="11" y="12" width="2" height="1" fill="#fff"/>
+                  <!-- Data right -->
+                  <rect x="14" y="8" width="2" height="1" fill="#fff"/>
+                  <rect x="17" y="8" width="1" height="1" fill="#fff"/>
+                  <rect x="19" y="8" width="1" height="1" fill="#fff"/>
+                  <rect x="15" y="9" width="1" height="1" fill="#fff"/>
+                  <rect x="18" y="9" width="2" height="1" fill="#fff"/>
+                  <rect x="14" y="10" width="1" height="1" fill="#fff"/>
+                  <rect x="16" y="10" width="2" height="1" fill="#fff"/>
+                  <rect x="20" y="10" width="1" height="1" fill="#fff"/>
+                  <rect x="15" y="11" width="2" height="1" fill="#fff"/>
+                  <rect x="19" y="11" width="1" height="1" fill="#fff"/>
+                  <rect x="14" y="12" width="1" height="1" fill="#fff"/>
+                  <rect x="16" y="12" width="1" height="1" fill="#fff"/>
+                  <rect x="18" y="12" width="2" height="1" fill="#fff"/>
+                  <!-- Data bottom center -->
+                  <rect x="8" y="14" width="1" height="1" fill="#fff"/>
+                  <rect x="10" y="14" width="2" height="1" fill="#fff"/>
+                  <rect x="9" y="15" width="2" height="1" fill="#fff"/>
+                  <rect x="12" y="15" width="1" height="1" fill="#fff"/>
+                  <rect x="8" y="16" width="2" height="1" fill="#fff"/>
+                  <rect x="11" y="16" width="2" height="1" fill="#fff"/>
+                  <rect x="9" y="17" width="1" height="1" fill="#fff"/>
+                  <rect x="11" y="17" width="1" height="1" fill="#fff"/>
+                  <rect x="8" y="18" width="1" height="1" fill="#fff"/>
+                  <rect x="10" y="18" width="1" height="1" fill="#fff"/>
+                  <rect x="12" y="18" width="1" height="1" fill="#fff"/>
+                  <!-- Data bottom right -->
+                  <rect x="14" y="14" width="2" height="1" fill="#fff"/>
+                  <rect x="17" y="14" width="1" height="1" fill="#fff"/>
+                  <rect x="20" y="14" width="1" height="1" fill="#fff"/>
+                  <rect x="15" y="15" width="1" height="1" fill="#fff"/>
+                  <rect x="19" y="15" width="1" height="1" fill="#fff"/>
+                  <rect x="14" y="16" width="1" height="1" fill="#fff"/>
+                  <rect x="16" y="16" width="2" height="1" fill="#fff"/>
+                  <rect x="20" y="16" width="1" height="1" fill="#fff"/>
+                  <rect x="15" y="17" width="2" height="1" fill="#fff"/>
+                  <rect x="18" y="17" width="1" height="1" fill="#fff"/>
+                  <rect x="14" y="18" width="1" height="1" fill="#fff"/>
+                  <rect x="17" y="18" width="2" height="1" fill="#fff"/>
+                  <rect x="15" y="19" width="1" height="1" fill="#fff"/>
+                  <rect x="18" y="19" width="2" height="1" fill="#fff"/>
+                  <rect x="14" y="20" width="2" height="1" fill="#fff"/>
+                  <rect x="17" y="20" width="1" height="1" fill="#fff"/>
+                  <rect x="20" y="20" width="1" height="1" fill="#fff"/>
+                </svg>
+              </div>
+              <div class="ckout-qr-info">
+                <p class="qr-brand">Kaizer Tech S.A.C.</p>
+                <p class="qr-ruc">RUC: 20123456789</p>
+                <div class="qr-divider"></div>
+                <p class="qr-phone"><i class="fi fi-rs-mobile-notch"></i> 999 000 111</p>
+                <p class="qr-amount">S/ <strong>{{ s.grandTotal.toFixed(2) }}</strong></p>
+              </div>
+            </div>
+            <div class="ckout-field">
+              <label>Número de operación</label>
+              <input type="text" inputmode="numeric" placeholder="Ingresa el código de tu operación"
+                maxlength="12" [value]="opNumber" (input)="onOpInput($event)"
+                [class.has-error]="errors()['opNumber']" />
+              @if (errors()['opNumber']) { <span class="field-error">{{ errors()['opNumber'] }}</span> }
+            </div>
+          </div>
+        }
+      </section>
+
+      <button class="ckout-pay-btn" [disabled]="loading()" (click)="handleSubmit()">
+        @if (loading()) {
+          <span class="ckout-spinner"></span> Procesando…
+        } @else {
+          <i class="fi fi-rs-lock"></i> Pagar S/ {{ s.grandTotal.toFixed(2) }}
+        }
+      </button>
+    </div>
+
+    <!-- ─── Columna derecha: resumen del pedido ─── -->
+    <div class="ckout-summary-col">
+      <div class="ckout-summary-header">
+        <h3>Tu pedido</h3>
+        <span class="ckout-item-count">{{ cartService.cart().length }} producto{{ cartService.cart().length !== 1 ? 's' : '' }}</span>
+      </div>
+
+      <div class="ckout-items">
+        @for (item of cartService.cart(); track item.id) {
+          <div class="ckout-item">
+            <div class="ckout-item-img-wrap">
+              <img [src]="item.imageUrl" [alt]="item.name" class="ckout-item-img" />
+              <span class="ckout-item-badge">{{ item.quantity }}</span>
+            </div>
+            <div class="ckout-item-info">
+              <span class="ckout-item-name">{{ item.name }}</span>
+              @if (item.quantity > 1) {
+                <span class="ckout-item-unit">S/ {{ item.price.toFixed(2) }} c/u</span>
+              }
+            </div>
+            <span class="ckout-item-price">S/ {{ (item.price * item.quantity).toFixed(2) }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="ckout-summary-body">
+        <div class="ckout-total-row">
+          <span>Subtotal</span>
+          <span>S/ {{ s.subtotal.toFixed(2) }}</span>
+        </div>
+        <div class="ckout-total-row">
+          <span>IGV (18%)</span>
+          <span>S/ {{ s.igv.toFixed(2) }}</span>
+        </div>
+        <div class="ckout-total-row">
+          <span>Envío — {{ s.city }}</span>
+          <span [class.free-shipping]="s.shippingCost === 0">
+            {{ s.shippingCost === 0 ? 'Gratis' : 'S/ ' + s.shippingCost.toFixed(2) }}
+          </span>
+        </div>
+        <hr class="ckout-divider" />
+        <div class="ckout-grand-total">
+          <span>Total a pagar</span>
+          <strong>S/ {{ s.grandTotal.toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <div class="ckout-trust-badges">
+        <div class="trust-badge"><i class="fi fi-rs-shield-alt"></i> Compra segura</div>
+        <div class="trust-badge"><i class="fi fi-rs-truck-side"></i> Envío a todo el Perú</div>
+        <div class="trust-badge"><i class="fi fi-rs-refresh"></i> Garantía 30 días</div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,172 @@
+<div class="prof-container">
+  <div class="prof-header">
+    <div class="prof-avatar"><i class="fi fi-rs-user"></i></div>
+    <div class="prof-identity">
+      <h2 class="prof-name">{{ auth.userNombre() || auth.userEmail() }}</h2>
+      @if (auth.userNombre()) {
+        <p class="prof-email-small">{{ auth.userEmail() }}</p>
+      }
+      <p class="prof-subtitle">Cuenta de cliente Kaizer Tech</p>
+    </div>
+  </div>
+
+  <div class="prof-tabs">
+    <button class="prof-tab" [class.is-active]="tab() === 'profile'" (click)="setTab('profile')">
+      <i class="fi fi-rs-settings"></i> Mi Perfil
+    </button>
+    <button class="prof-tab" [class.is-active]="tab() === 'orders'" (click)="setTab('orders')">
+      <i class="fi fi-rs-shopping-bag"></i> Mis Pedidos
+    </button>
+  </div>
+
+  @if (tab() === 'profile') {
+    <div class="prof-panel">
+      <h3 class="prof-section-title">Información personal</h3>
+      <p class="prof-section-hint">Estos datos se usarán para la emisión de comprobantes y la logística de entrega.</p>
+
+      <div class="prof-form">
+        <div class="prof-field prof-field--full">
+          <label>Correo electrónico</label>
+          <input type="email" [value]="auth.userEmail() ?? ''" readonly class="is-readonly" />
+        </div>
+        <div class="prof-field prof-field--full">
+          <label>Nombre completo</label>
+          <input type="text" placeholder="Tu nombre y apellidos" [(ngModel)]="form.nombre" maxlength="100" />
+        </div>
+        <div class="prof-field prof-field--full">
+          <label>DNI / RUC</label>
+          <div class="prof-doc-row">
+            <input type="text" inputmode="numeric" placeholder="8 dígitos (DNI) o 11 dígitos (RUC)" [(ngModel)]="form.docNumber" maxlength="11" />
+            <button class="prof-verify-btn" (click)="handleVerifyDoc()" [disabled]="docVerifying()">
+              {{ docVerifying() ? '...' : 'Verificar' }}
+            </button>
+          </div>
+          @if (docResult()) {
+            <div class="prof-doc-result">
+              <span><strong>{{ docResult() }}</strong></span>
+              <button class="prof-apply-btn" (click)="applyDocName()">Usar como nombre</button>
+            </div>
+          }
+        </div>
+        <div class="prof-field">
+          <label>Teléfono</label>
+          <input type="tel" placeholder="999 000 111" [(ngModel)]="form.telefono" maxlength="20" />
+        </div>
+        <div class="prof-field">
+          <label>Ciudad</label>
+          <select [(ngModel)]="form.ciudad" class="prof-select">
+            @for (c of cities; track c) { <option [value]="c">{{ c }}</option> }
+          </select>
+        </div>
+        <div class="prof-field prof-field--full">
+          <label>Dirección de entrega</label>
+          <input type="text" placeholder="Av. Ejemplo 123, Distrito" [(ngModel)]="form.direccion" maxlength="255" />
+        </div>
+      </div>
+
+      @if (saveMsg()) { <p style="color: #4ade80; margin-bottom: 12px; font-size: 0.9rem;">{{ saveMsg() }}</p> }
+      <button class="prof-save-btn" [disabled]="saving()" (click)="handleSave()">
+        {{ saving() ? 'Guardando…' : 'Guardar cambios' }}
+      </button>
+    </div>
+  }
+
+  @if (tab() === 'orders') {
+    <div class="prof-panel orders-panel">
+
+      @if (ordersLoading()) {
+        <div class="prof-orders-loading">
+          @for (s of skeletons; track $index) { <div class="prof-order-skel"></div> }
+        </div>
+      }
+      @if (ordersError()) {
+        <div class="prof-orders-error">
+          <i class="fi fi-rs-cross-circle"></i>
+          <p>No se pudieron cargar los pedidos</p>
+          <span>{{ ordersError() }}</span>
+          <button class="prof-retry-btn" (click)="retryOrders()">Reintentar</button>
+        </div>
+      }
+      @if (!ordersLoading() && !ordersError() && orders().length === 0) {
+        <div class="prof-orders-empty">
+          <i class="fi fi-rs-box-open"></i>
+          <p>Aún no tienes pedidos registrados</p>
+          <span>Cuando realices una compra aparecerá aquí</span>
+        </div>
+      }
+
+      @if (!ordersLoading() && orders().length > 0) {
+        <div class="orders-header-row">
+          <h3 class="prof-section-title" style="margin:0">Mis pedidos</h3>
+          <span class="orders-count-chip">{{ orders().length }} pedido{{ orders().length !== 1 ? 's' : '' }}</span>
+        </div>
+        <div class="prof-orders-list">
+          @for (order of orders(); track order.id) {
+            <div class="prof-order-card" [class.is-open]="expanded().has(order.id)">
+
+              <!-- Header del pedido -->
+              <div class="prof-order-head" (click)="toggleExpand(order.id)" role="button" tabindex="0" (keydown.enter)="toggleExpand(order.id)">
+                <div class="order-head-left">
+                  <div class="order-id-block">
+                    <span class="order-id-label">Pedido</span>
+                    <span class="order-id-value">#{{ padOrder(order.id) }}</span>
+                  </div>
+                  <div class="order-date-block">
+                    <i class="fi fi-rs-calendar"></i>
+                    <span>{{ fmtDate(order.createdAt) }}</span>
+                  </div>
+                  <div class="order-items-pill">
+                    {{ order.items.length }} producto{{ order.items.length !== 1 ? 's' : '' }}
+                  </div>
+                </div>
+                <div class="order-head-right">
+                  <span class="prof-status-badge" [class]="'status-' + order.estado.toLowerCase()">
+                    <i [class]="statusIcon[order.estado] ?? 'fi fi-rs-circle'"></i>
+                    {{ statusLabel[order.estado] ?? order.estado }}
+                  </span>
+                  <span class="order-total-amount">S/ {{ (+order.total).toFixed(2) }}</span>
+                  <span class="order-chevron" [class.rotated]="expanded().has(order.id)">
+                    <i class="fi fi-rs-angle-down"></i>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Detalle expandido -->
+              @if (expanded().has(order.id)) {
+                <div class="prof-order-detail">
+                  @if (order.direccionEnvio) {
+                    <div class="order-delivery-row">
+                      <i class="fi fi-rs-truck-side"></i>
+                      <div>
+                        <span class="order-delivery-label">Dirección de entrega</span>
+                        <span class="order-delivery-addr">{{ order.direccionEnvio }}</span>
+                      </div>
+                    </div>
+                  }
+                  <div class="order-items-list">
+                    @for (item of order.items; track item.productoId) {
+                      <div class="order-item-row">
+                        <div class="order-item-qty-badge">{{ item.cantidad }}</div>
+                        <span class="order-item-name">{{ item.nombreProducto }}</span>
+                        <div class="order-item-pricing">
+                          @if (item.cantidad > 1) {
+                            <span class="order-item-unit">S/ {{ (+item.precioUnitario).toFixed(2) }} c/u</span>
+                          }
+                          <span class="order-item-subtotal">S/ {{ (+item.subtotal).toFixed(2) }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <div class="order-detail-footer">
+                    <span class="order-detail-total-label">Total del pedido</span>
+                    <span class="order-detail-total-val">S/ {{ (+order.total).toFixed(2) }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

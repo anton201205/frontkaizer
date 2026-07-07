@@ -1,0 +1,12 @@
+<div class="fixed-top-container">
+  <app-header />
+  @if (!isAboutPage()) {
+    <app-navbar />
+  }
+</div>
+
+<main class="main-content" [class.only-header]="isAboutPage()" [class.full-header]="!isAboutPage()">
+  <router-outlet />
+</main>
+
+<app-footer />

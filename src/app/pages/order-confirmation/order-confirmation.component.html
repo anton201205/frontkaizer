@@ -1,0 +1,192 @@
+@if (state) {
+  <div class="receipt-page">
+    <div class="receipt-actions no-print">
+      <button class="receipt-back-btn" (click)="goShopping()">← Seguir comprando</button>
+      <button class="receipt-print-btn" (click)="print()">
+        <i class="fi fi-rs-print"></i> Imprimir boleta
+      </button>
+    </div>
+
+    <div class="receipt-document" id="receipt">
+
+      <!-- Encabezado -->
+      <div class="receipt-top">
+        <div class="receipt-brand">
+          <div class="receipt-logo-row">
+            <div class="receipt-logo-icon">K</div>
+            <div>
+              <h1>Kaizer Tech</h1>
+              <p>Tecnología de calidad para todos</p>
+            </div>
+          </div>
+        </div>
+        <div class="receipt-meta">
+          <span class="receipt-type-badge">BOLETA ELECTRÓNICA</span>
+          <p class="receipt-order-id">N° {{ padId(state.orderId) }}</p>
+          <p class="receipt-date">{{ issuedAt }}</p>
+        </div>
+      </div>
+
+      <!-- Dirección de entrega -->
+      @if (state.direccion) {
+        <div class="receipt-address-row">
+          <i class="fi fi-rs-marker"></i>
+          <span>Envío a: <strong>{{ state.direccion }}, {{ state.city }}</strong></span>
+        </div>
+      }
+
+      <!-- Método de pago -->
+      <div class="receipt-payment-row">
+        <div class="receipt-payment-left">
+          <span class="receipt-payment-label">Método de pago</span>
+          <div class="receipt-payment-method">
+            @if (state.paymentMethod === 'Yape / Plin') {
+              <span class="pm-dot pm-qr"></span>
+            } @else {
+              <span class="pm-dot pm-card"></span>
+            }
+            <strong>{{ state.paymentMethod }}</strong>
+          </div>
+        </div>
+        <div class="receipt-payment-status">
+          <span class="receipt-paid-badge"><i class="fi fi-rs-check-circle"></i> Pago confirmado</span>
+        </div>
+      </div>
+
+      <!-- Tabla de productos -->
+      <table class="receipt-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="ta-r">P. Unit.</th>
+            <th class="ta-r">Cant.</th>
+            <th class="ta-r">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of state.items; track item.id) {
+            <tr>
+              <td class="product-name-cell">{{ item.name }}</td>
+              <td class="ta-r mono">S/ {{ item.price.toFixed(2) }}</td>
+              <td class="ta-r">{{ item.quantity }}</td>
+              <td class="ta-r mono">S/ {{ (item.price * item.quantity).toFixed(2) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- Totales -->
+      <div class="receipt-totals">
+        <div class="receipt-total-row"><span>Subtotal</span><span class="mono">S/ {{ state.subtotal.toFixed(2) }}</span></div>
+        <div class="receipt-total-row"><span>IGV (18%)</span><span class="mono">S/ {{ state.igv.toFixed(2) }}</span></div>
+        <div class="receipt-total-row">
+          <span>Envío — {{ state.city }}</span>
+          <span [class.shipping-free]="state.shippingCost === 0" class="mono">
+            {{ state.shippingCost === 0 ? 'Gratis' : 'S/ ' + state.shippingCost.toFixed(2) }}
+          </span>
+        </div>
+        <div class="receipt-total-row receipt-grand">
+          <strong>TOTAL PAGADO</strong>
+          <strong class="mono grand-amount">S/ {{ state.grandTotal.toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="receipt-footer">
+        <div class="receipt-footer-left">
+          <p class="footer-thanks">¡Gracias por tu compra en <span>Kaizer Tech</span>!</p>
+          <p class="footer-contact"><i class="fi fi-rs-envelope"></i> soporte&#64;kaizertech.pe &nbsp;·&nbsp; <i class="fi fi-rs-mobile-notch"></i> 999 000 111</p>
+        </div>
+        <div class="receipt-footer-qr">
+          <svg width="64" height="64" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+            <rect width="21" height="21" fill="#111"/>
+            <!-- Finder TL -->
+            <rect x="0" y="0" width="7" height="7" fill="#fff"/>
+            <rect x="1" y="1" width="5" height="5" fill="#111"/>
+            <rect x="2" y="2" width="3" height="3" fill="#fff"/>
+            <!-- Finder TR -->
+            <rect x="14" y="0" width="7" height="7" fill="#fff"/>
+            <rect x="15" y="1" width="5" height="5" fill="#111"/>
+            <rect x="16" y="2" width="3" height="3" fill="#fff"/>
+            <!-- Finder BL -->
+            <rect x="0" y="14" width="7" height="7" fill="#fff"/>
+            <rect x="1" y="15" width="5" height="5" fill="#111"/>
+            <rect x="2" y="16" width="3" height="3" fill="#fff"/>
+            <!-- Timing -->
+            <rect x="8" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="6" width="1" height="1" fill="#fff"/>
+            <rect x="6" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="6" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="6" y="12" width="1" height="1" fill="#fff"/>
+            <!-- Data modules -->
+            <rect x="8" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="9" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="11" y="9" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="8" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="11" width="1" height="1" fill="#fff"/>
+            <rect x="11" y="11" width="1" height="1" fill="#fff"/>
+            <rect x="8" y="12" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="12" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="12" width="1" height="1" fill="#fff"/>
+            <!-- Right data area -->
+            <rect x="14" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="18" y="8" width="1" height="1" fill="#fff"/>
+            <rect x="15" y="9" width="1" height="1" fill="#fff"/>
+            <rect x="17" y="9" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="20" y="10" width="1" height="1" fill="#fff"/>
+            <rect x="15" y="11" width="1" height="1" fill="#fff"/>
+            <rect x="19" y="11" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="12" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="12" width="1" height="1" fill="#fff"/>
+            <rect x="18" y="12" width="1" height="1" fill="#fff"/>
+            <!-- Bottom data area -->
+            <rect x="8" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="15" width="1" height="1" fill="#fff"/>
+            <rect x="11" y="15" width="1" height="1" fill="#fff"/>
+            <rect x="8" y="16" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="16" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="16" width="1" height="1" fill="#fff"/>
+            <rect x="9" y="17" width="1" height="1" fill="#fff"/>
+            <rect x="11" y="17" width="1" height="1" fill="#fff"/>
+            <rect x="8" y="18" width="1" height="1" fill="#fff"/>
+            <rect x="10" y="18" width="1" height="1" fill="#fff"/>
+            <rect x="12" y="18" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="18" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="20" y="14" width="1" height="1" fill="#fff"/>
+            <rect x="15" y="15" width="1" height="1" fill="#fff"/>
+            <rect x="19" y="15" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="16" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="16" width="1" height="1" fill="#fff"/>
+            <rect x="18" y="16" width="1" height="1" fill="#fff"/>
+            <rect x="15" y="17" width="1" height="1" fill="#fff"/>
+            <rect x="17" y="17" width="1" height="1" fill="#fff"/>
+            <rect x="20" y="17" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="18" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="18" width="1" height="1" fill="#fff"/>
+            <rect x="20" y="18" width="1" height="1" fill="#fff"/>
+            <rect x="15" y="19" width="1" height="1" fill="#fff"/>
+            <rect x="17" y="19" width="1" height="1" fill="#fff"/>
+            <rect x="19" y="19" width="1" height="1" fill="#fff"/>
+            <rect x="14" y="20" width="1" height="1" fill="#fff"/>
+            <rect x="16" y="20" width="1" height="1" fill="#fff"/>
+            <rect x="18" y="20" width="1" height="1" fill="#fff"/>
+          </svg>
+          <span class="footer-qr-label">Verificar compra</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}

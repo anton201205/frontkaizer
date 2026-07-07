@@ -1,0 +1,71 @@
+.navbar {
+  background: #0a0a0a;
+  border-bottom: 1px solid #1a1a1a;
+  width: 100%;
+}
+
+.navbar-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  color: #666;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-link:hover { color: #ccc; }
+
+.nav-link.active {
+  color: #fff;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Admin badge */
+.nav-link.admin-link {
+  color: #888;
+  font-size: 0.78rem;
+}
+.nav-link.admin-link::before {
+  content: '⚙';
+  margin-right: 5px;
+  font-size: 0.75rem;
+}
+.nav-link.admin-link:hover { color: #fff; }
+.nav-link.admin-link.active { color: #fff; }
+
+@media (max-width: 768px) {
+  .nav-link { padding: 14px 12px; font-size: 0.75rem; }
+  .navbar-container { padding: 0 16px; }
+}

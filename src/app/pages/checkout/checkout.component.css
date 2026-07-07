@@ -1,0 +1,120 @@
+.ckout-container { max-width: 1100px; margin: 50px auto; padding: 0 24px 80px; }
+
+/* Topbar */
+.ckout-topbar { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
+.ckout-back { background: transparent; border: 1px solid #222; color: #666; padding: 9px 18px; border-radius: 999px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; gap: 7px; }
+.ckout-back:hover { border-color: #444; color: #fff; }
+.ckout-title { font-size: 1.8rem; font-weight: 700; color: #fff; margin: 0; letter-spacing: -0.5px; }
+
+/* Layout */
+.ckout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start; }
+
+/* Sections */
+.ckout-section { background: #111; border: 1px solid #1e1e1e; border-radius: 18px; padding: 28px; margin-bottom: 16px; }
+.ckout-section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.ckout-step { width: 28px; height: 28px; background: #fff; color: #000; border-radius: 50%; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ckout-section-title { font-size: 1rem; font-weight: 700; color: #fff; margin: 0; }
+
+/* Address */
+.ckout-address-confirmed { display: flex; align-items: center; gap: 14px; background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 12px; padding: 16px 18px; }
+.address-icon { color: #4caf80; font-size: 1rem; flex-shrink: 0; }
+.ckout-address-text { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.ckout-address-main { color: #ddd; font-size: 0.92rem; font-weight: 500; }
+.ckout-address-city { color: #555; font-size: 0.78rem; }
+.ckout-address-edit { background: transparent; border: 1px solid #2a2a2a; color: #666; font-size: 0.78rem; padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+.ckout-address-edit:hover { border-color: #555; color: #ccc; }
+.ckout-address-form { display: flex; gap: 10px; }
+.ckout-address-input { flex: 1; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 10px; color: #fff; font-size: 0.9rem; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
+.ckout-address-input:focus { border-color: #444; }
+.ckout-address-save { background: #fff; color: #000; border: none; font-size: 0.85rem; font-weight: 700; padding: 11px 20px; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+.ckout-address-save:hover { background: #e8e8e8; }
+
+/* Payment tabs */
+.ckout-method-tabs { display: flex; gap: 10px; margin-bottom: 24px; }
+.ckout-tab { flex: 1; padding: 14px 16px; background: #0a0a0a; border: 1px solid #222; color: #555; border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ckout-tab i { font-size: 1.2rem; }
+.ckout-tab span { font-size: 0.88rem; font-weight: 700; color: inherit; }
+.ckout-tab small { font-size: 0.72rem; color: #444; }
+.ckout-tab:hover { border-color: #333; color: #aaa; }
+.ckout-tab.is-active { background: #fff; border-color: #fff; color: #000; }
+.ckout-tab.is-active small { color: #555; }
+
+/* Card form */
+.ckout-card-form { display: flex; flex-direction: column; gap: 18px; }
+.ckout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ckout-field { display: flex; flex-direction: column; gap: 7px; }
+.ckout-field label { font-size: 0.72rem; color: #555; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700; }
+.ckout-field input { background: #0a0a0a; border: 1px solid #222; border-radius: 12px; color: #fff; font-size: 0.95rem; padding: 13px 16px; outline: none; transition: border-color 0.2s; width: 100%; }
+.ckout-field input:focus { border-color: #444; }
+.ckout-field input.has-error { border-color: var(--danger); }
+.ckout-field input::placeholder { color: #333; }
+.input-icon-wrap { position: relative; }
+.input-icon-wrap input { padding-left: 42px; }
+.input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #444; font-size: 1rem; }
+.field-error { font-size: 0.76rem; color: var(--danger); }
+.ckout-security-note { font-size: 0.76rem; color: #444; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+
+/* QR */
+.ckout-qr-section { display: flex; flex-direction: column; gap: 20px; }
+.ckout-qr-card { background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 16px; padding: 24px; display: flex; gap: 28px; align-items: center; }
+.ckout-qr-mock { width: 110px; height: 110px; border: 2px solid #2a2a2a; border-radius: 12px; flex-shrink: 0; overflow: hidden; background: #050505; display: flex; align-items: center; justify-content: center; }
+.ckout-qr-mock svg { display: block; width: 110px; height: 110px; }
+.ckout-qr-info { display: flex; flex-direction: column; gap: 5px; }
+.qr-brand { color: #fff; font-weight: 700; font-size: 0.95rem; }
+.qr-ruc { color: #555; font-size: 0.78rem; }
+.qr-divider { height: 1px; background: #1e1e1e; margin: 6px 0; }
+.qr-phone { color: #aaa; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.qr-amount { font-size: 1.4rem; color: #7ecfff; margin-top: 4px; }
+.qr-amount strong { font-size: 1.5rem; font-weight: 800; }
+
+/* Pay button */
+.ckout-pay-btn { width: 100%; margin-top: 8px; padding: 18px; background: #fff; color: #000; border: none; border-radius: 999px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: 0.01em; }
+.ckout-pay-btn:hover:not(:disabled) { background: #e8e8e8; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,255,255,0.08); }
+.ckout-pay-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.ckout-spinner { width: 16px; height: 16px; border: 2px solid #333; border-top-color: #000; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Summary column ─── */
+.ckout-summary-col { background: #111; border: 1px solid #1e1e1e; border-radius: 20px; overflow: hidden; position: sticky; top: 100px; }
+
+.ckout-summary-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px 18px; border-bottom: 1px solid #1a1a1a; }
+.ckout-summary-header h3 { color: #fff; font-size: 1rem; font-weight: 700; margin: 0; }
+.ckout-item-count { font-size: 0.78rem; color: #555; background: #1a1a1a; padding: 4px 10px; border-radius: 999px; }
+
+/* Items list */
+.ckout-items { display: flex; flex-direction: column; gap: 0; max-height: 340px; overflow-y: auto; padding: 8px 0; }
+.ckout-items::-webkit-scrollbar { width: 4px; }
+.ckout-items::-webkit-scrollbar-track { background: transparent; }
+.ckout-items::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+.ckout-item { display: flex; align-items: center; gap: 14px; padding: 12px 24px; transition: background 0.15s; }
+.ckout-item:hover { background: #0a0a0a; }
+
+.ckout-item-img-wrap { position: relative; flex-shrink: 0; }
+.ckout-item-img { width: 52px; height: 52px; object-fit: contain; background: #fff; border-radius: 10px; padding: 4px; display: block; }
+.ckout-item-badge { position: absolute; top: -6px; right: -6px; background: #333; color: #fff; font-size: 0.65rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+.ckout-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ckout-item-name { font-size: 0.83rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.ckout-item-unit { font-size: 0.72rem; color: #444; }
+.ckout-item-price { font-size: 0.88rem; color: #fff; font-weight: 700; white-space: nowrap; }
+
+/* Totals */
+.ckout-summary-body { padding: 16px 24px 20px; border-top: 1px solid #1a1a1a; display: flex; flex-direction: column; gap: 10px; }
+.ckout-total-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; }
+.ckout-total-row span:last-child { color: #aaa; }
+.free-shipping { color: #4caf80 !important; font-weight: 700; }
+.ckout-divider { border: none; border-top: 1px solid #1e1e1e; margin: 6px 0; }
+.ckout-grand-total { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.ckout-grand-total span { color: #aaa; font-size: 0.88rem; }
+.ckout-grand-total strong { color: #fff; font-size: 1.35rem; font-weight: 800; }
+
+/* Trust badges */
+.ckout-trust-badges { display: flex; justify-content: space-around; padding: 16px 20px; border-top: 1px solid #1a1a1a; background: #0a0a0a; }
+.trust-badge { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 0.7rem; color: #444; text-align: center; }
+.trust-badge i { font-size: 1rem; color: #333; }
+
+@media (max-width: 860px) {
+  .ckout-layout { grid-template-columns: 1fr; }
+  .ckout-summary-col { position: static; order: -1; }
+}

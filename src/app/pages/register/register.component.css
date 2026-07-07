@@ -1,0 +1,12 @@
+.auth-page { width: 100%; padding: 60px 20px; background: var(--bg-primary); display: flex; justify-content: center; }
+.auth-card { width: 100%; max-width: 520px; background: #161616; border: 1px solid #262626; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.auth-title { font-family: 'IBM Plex Mono', monospace; font-size: 2rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 24px; }
+.auth-form { display: flex; flex-direction: column; gap: 18px; }
+.auth-field { display: flex; flex-direction: column; gap: 8px; }
+.auth-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; color: var(--text-secondary); }
+.auth-input { width: 100%; padding: 12px 14px; background: #0f0f0f; border: 1px solid #262626; border-radius: 12px; color: var(--text-primary); outline: none; font-family: 'IBM Plex Mono', monospace; }
+.auth-input:focus { border-color: var(--accent-primary); }
+.auth-error { font-family: 'IBM Plex Mono', monospace; color: var(--danger); font-size: 0.9rem; }
+.hero-button { display: inline-block; padding: 14px 30px; background: #fff; color: var(--black); border-radius: 999px; font-size: 1rem; font-weight: 600; transition: 0.3s ease; }
+.auth-button { border: 0; cursor: pointer; width: fit-content; }
+.auth-button:disabled { opacity: 0.7; cursor: not-allowed; }

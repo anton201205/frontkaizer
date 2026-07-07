@@ -1,0 +1,99 @@
+@if (productService.error()) {
+  <div class="kaizer-error-box">
+    <h2>Hubo un problema al cargar los productos. Por favor, intenta de nuevo más tarde.</h2>
+  </div>
+} @else {
+  <div class="kaizer-catalog-wrapper">
+    <aside class="kaizer-sidebar">
+      <h4 class="kaizer-sidebar-title">Filtros Avanzados</h4>
+
+      <div class="kaizer-filter-item">
+        <label for="sort-select">Ordenar por:</label>
+        <select id="sort-select" class="kaizer-select-input" (change)="setSortBy($event)">
+          <option value="default">Recomendados</option>
+          <option value="low-to-high">Precio: Menor a Mayor</option>
+          <option value="high-to-low">Precio: Mayor a Menor</option>
+        </select>
+      </div>
+
+      <div class="kaizer-filter-item">
+        <label>Precio máximo: <span>S/ {{ maxPrice() }}</span></label>
+        <input type="range" min="0" max="10000" step="50" [value]="maxPrice()" (input)="setMaxPrice($event)" class="kaizer-range-input" />
+      </div>
+
+      <div class="kaizer-filter-item">
+        <label class="kaizer-toggle-label">
+          <span>Solo disponibles</span>
+          <div class="kaizer-toggle">
+            <input type="checkbox" class="kaizer-toggle-input" [checked]="onlyInStock()" (change)="setOnlyInStock($event)" />
+            <span class="kaizer-toggle-slider"></span>
+          </div>
+        </label>
+      </div>
+    </aside>
+
+    <main class="kaizer-main-content">
+      <h2 class="kaizer-main-title">Nuestros productos</h2>
+
+      @if (productService.loading()) {
+        <div class="kaizer-products-grid">
+          @for (s of skeletons; track $index) {
+            <div class="kaizer-card">
+              <div class="kaizer-skel kaizer-skel-img"></div>
+              <div class="kaizer-card-body">
+                <div class="kaizer-skel kaizer-skel-title"></div>
+                <div class="kaizer-skel kaizer-skel-price"></div>
+                <div class="kaizer-skel kaizer-skel-stock"></div>
+              </div>
+              <div class="kaizer-card-footer">
+                <div class="kaizer-skel kaizer-skel-btn"></div>
+                <div class="kaizer-skel kaizer-skel-btn"></div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="kaizer-chips-container">
+          @for (cat of categories(); track cat) {
+            <button class="kaizer-chip-btn" [class.is-active]="selectedCategory() === cat" (click)="setCategory(cat)">
+              {{ cat }}
+            </button>
+          }
+        </div>
+
+        @if (processedProducts().length === 0) {
+          <div class="kaizer-empty-msg">No se encontraron productos con los filtros seleccionados.</div>
+        } @else {
+          <div class="kaizer-products-grid">
+            @for (product of processedProducts(); track product.id) {
+              <div class="kaizer-card">
+                <div class="kaizer-card-img-box">
+                  <img
+                    [src]="product.imageUrl || fallbackImage"
+                    [alt]="product.name"
+                    class="kaizer-card-img"
+                    loading="lazy"
+                    (error)="imgError($event)"
+                  />
+                </div>
+                <div class="kaizer-card-body">
+                  <h5 class="kaizer-card-name">{{ product.name }}</h5>
+                  <p class="kaizer-card-price">S/ {{ product.price.toFixed(2) }}</p>
+                  <p class="kaizer-card-stock">Stock: {{ product.stock ?? 0 }}</p>
+                </div>
+                <div class="kaizer-card-footer">
+                  <a [routerLink]="['/products', product.id]" class="kaizer-btn-details">Detalles</a>
+                  <button
+                    class="kaizer-btn-cart"
+                    [disabled]="outOfStock().has(product.id!)"
+                    (click)="addToCart(product)"
+                  >Añadir</button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </main>
+  </div>
+}

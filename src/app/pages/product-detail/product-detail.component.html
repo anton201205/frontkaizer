@@ -1,0 +1,91 @@
+@if (loading()) {
+  <div class="kaizer-detail-loading">
+    <div class="kaizer-spinner"></div>
+    <p>Cargando producto...</p>
+  </div>
+} @else if (notFound() || !product()) {
+  <div class="kaizer-detail-not-found">
+    <h2>Producto no encontrado</h2>
+    <p>El identificador no existe o el servidor no respondió.</p>
+    <a routerLink="/products" class="kaizer-detail-back-btn">Volver al catálogo</a>
+  </div>
+} @else {
+  <div class="kaizer-detail-container">
+    <nav class="kaizer-detail-breadcrumb">
+      <a routerLink="/products">Productos</a>
+      <span>/</span>
+      <a routerLink="/products">{{ product()!.category }}</a>
+      <span>/</span>
+      <span class="kaizer-active-crumb">{{ product()!.name }}</span>
+    </nav>
+
+    <div class="kaizer-detail-main-card">
+      <div class="kaizer-detail-img-section">
+        <div class="kaizer-detail-img-wrapper">
+          <img
+            [src]="product()!.imageUrl || fallbackImage"
+            [alt]="product()!.name"
+            class="kaizer-detail-image"
+            (error)="imgError($event)"
+          />
+        </div>
+      </div>
+
+      <div class="kaizer-detail-info-section">
+        <span class="kaizer-detail-badge">{{ product()!.category }}</span>
+        <h2 class="kaizer-detail-title">{{ product()!.name }}</h2>
+
+        <div class="kaizer-detail-price-box">
+          <span class="kaizer-detail-price">S/ {{ product()!.price.toFixed(2) }}</span>
+          <span class="kaizer-detail-status" [class.in-stock]="(product()!.stock ?? 0) > 0" [class.out-of-stock]="(product()!.stock ?? 0) <= 0">
+            {{ (product()!.stock ?? 0) > 0 ? '✔ Disponible (' + product()!.stock + ')' : '✕ Sin stock' }}
+          </span>
+        </div>
+
+        <p class="kaizer-detail-description">
+          {{ product()!.description || 'El ' + product()!.name + ' ofrece un equilibrio sólido entre diseño y rendimiento.' }}
+        </p>
+
+        <div class="kaizer-detail-actions">
+          <button class="kaizer-btn-add-cart" [disabled]="(product()!.stock ?? 0) <= 0" (click)="addToCart()">
+            <i class="fi fi-rs-shopping-cart"></i> Añadir al carrito
+          </button>
+          <a routerLink="/cart" class="kaizer-btn-view-cart">Ver carrito</a>
+        </div>
+
+        <div class="kaizer-detail-extra">
+          <div class="kaizer-extra-item">
+            <strong>Garantía</strong>
+            <p>Cobertura oficial del fabricante.</p>
+          </div>
+          <div class="kaizer-extra-item">
+            <strong>Devoluciones</strong>
+            <p>Consulta condiciones en checkout.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (specEntries().length > 0) {
+      <div class="kaizer-specs-card">
+        <div class="kaizer-specs-header">
+          <h3>Especificaciones Técnicas</h3>
+          <p>Detalles de hardware mapeados en tiempo real desde la base de datos de Kaizer Tech.</p>
+        </div>
+        <div class="kaizer-specs-grid">
+          @for (entry of specEntries(); track entry[0]) {
+            <div class="kaizer-spec-item">
+              <div class="kaizer-spec-icon-box">
+                <i [class]="getIconForSpec(entry[0])"></i>
+              </div>
+              <div class="kaizer-spec-content">
+                <span class="kaizer-spec-label">{{ entry[0] }}</span>
+                <span class="kaizer-spec-value">{{ entry[1] }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
