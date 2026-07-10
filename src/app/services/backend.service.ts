@@ -107,6 +107,18 @@ export class BackendService {
     );
   }
 
+  async updateProducto(id: number, data: ProductoRequest): Promise<ProductoResponse> {
+    return firstValueFrom(
+      this.http.put<ProductoResponse>(`${this.getBaseUrl()}/api/productos/${id}`, data)
+    );
+  }
+
+  async deleteProducto(id: number): Promise<void> {
+    return firstValueFrom(
+      this.http.delete<void>(`${this.getBaseUrl()}/api/productos/${id}`)
+    );
+  }
+
   async getPerfil(): Promise<ProfileResponse> {
     return firstValueFrom(
       this.http.get<ProfileResponse>(`${this.getBaseUrl()}/api/usuarios/perfil`)

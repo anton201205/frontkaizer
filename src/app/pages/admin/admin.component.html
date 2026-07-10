@@ -13,6 +13,10 @@
       <i class="fi fi-rs-box"></i> Catálogo
       <span class="tab-count">{{ productService.products().length }}</span>
     </button>
+    <button class="admin-tab" [class.is-active]="tab() === 'edicion'" (click)="tab.set('edicion')">
+      <i class="fi fi-rs-edit"></i> Edición
+      <span class="tab-count">{{ productService.products().length }}</span>
+    </button>
     <button class="admin-tab" [class.is-active]="tab() === 'orders'" (click)="tab.set('orders')">
       <i class="fi fi-rs-shopping-bag"></i> Pedidos
       @if (orders().length > 0) {
@@ -21,7 +25,7 @@
     </button>
   </div>
 
-  <!-- ═══════════════════ TAB: CATÁLOGO ═══════════════════ -->
+  <!-- ═══════════════════ TAB: CATÁLOGO (crear) ═══════════════════ -->
   @if (tab() === 'catalog') {
     <div class="admin-layout">
       <div class="admin-form-col">
@@ -104,6 +108,115 @@
           </div>
         }
       </div>
+    </div>
+  }
+
+  <!-- ═══════════════════ TAB: EDICIÓN ═══════════════════ -->
+  @if (tab() === 'edicion') {
+    <div class="edit-section">
+      <h3 class="admin-section-title">
+        <i class="fi fi-rs-edit"></i> Editar o eliminar productos
+        <span class="admin-count">{{ productService.products().length }}</span>
+      </h3>
+
+      @if (editSuccessMsg()) { <p class="admin-success-msg">{{ editSuccessMsg() }}</p> }
+
+      @if (productService.loading()) {
+        <div class="admin-catalog-loading">
+          @for (s of skeletons; track $index) { <div class="admin-prod-skel"></div> }
+        </div>
+      } @else if (productService.products().length === 0) {
+        <div class="orders-empty">
+          <i class="fi fi-rs-box"></i>
+          <p>No hay productos en el catálogo</p>
+        </div>
+      } @else {
+        <div class="edit-list">
+          @for (p of productService.products(); track p.id) {
+            <div class="edit-card" [class.is-open]="editingId() === p.id">
+
+              <div class="edit-card-head">
+                <img [src]="p.imageUrl || fallback" [alt]="p.name" class="admin-prod-thumb" (error)="imgError($event)" />
+                <div class="admin-prod-info">
+                  <span class="admin-prod-name">{{ p.name }}</span>
+                  <span class="admin-prod-meta">S/ {{ p.price.toFixed(2) }} · Stock: {{ p.stock ?? 0 }}</span>
+                </div>
+                <div class="edit-card-actions">
+                  @if (editingId() !== p.id) {
+                    <button class="edit-btn" (click)="startEdit(p)">
+                      <i class="fi fi-rs-edit"></i> Editar
+                    </button>
+                  } @else {
+                    <button class="edit-btn edit-btn--cancel" (click)="cancelEdit()">
+                      Cancelar
+                    </button>
+                  }
+                  <button class="edit-btn edit-btn--danger" [disabled]="deletingId() === p.id" (click)="deleteProduct(p)">
+                    @if (deletingId() === p.id) {
+                      <span class="estado-spinner"></span>
+                    } @else {
+                      <i class="fi fi-rs-trash"></i>
+                    }
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+
+              @if (editingId() === p.id) {
+                <div class="edit-card-form">
+                  <div class="admin-form">
+                    <div class="admin-field admin-field--full">
+                      <label>Nombre del producto *</label>
+                      <input type="text" [(ngModel)]="editForm.nombre" maxlength="200"
+                        [class.has-error]="editErrors()['nombre']" />
+                      @if (editErrors()['nombre']) { <span class="admin-error">{{ editErrors()['nombre'] }}</span> }
+                    </div>
+
+                    <div class="admin-field admin-field--full">
+                      <label>Descripción *</label>
+                      <textarea [(ngModel)]="editForm.descripcion" maxlength="2000" rows="4"
+                        [class.has-error]="editErrors()['descripcion']"></textarea>
+                      @if (editErrors()['descripcion']) { <span class="admin-error">{{ editErrors()['descripcion'] }}</span> }
+                    </div>
+
+                    <div class="admin-field">
+                      <label>Precio (S/) *</label>
+                      <input type="number" min="0.01" step="0.01" [(ngModel)]="editForm.precio"
+                        [class.has-error]="editErrors()['precio']" />
+                      @if (editErrors()['precio']) { <span class="admin-error">{{ editErrors()['precio'] }}</span> }
+                    </div>
+
+                    <div class="admin-field">
+                      <label>Stock *</label>
+                      <input type="number" min="0" step="1" [(ngModel)]="editForm.stock"
+                        [class.has-error]="editErrors()['stock']" />
+                      @if (editErrors()['stock']) { <span class="admin-error">{{ editErrors()['stock'] }}</span> }
+                    </div>
+
+                    <div class="admin-field admin-field--full">
+                      <label>URL de imagen *</label>
+                      <input type="url" [(ngModel)]="editForm.imageUrl" maxlength="500"
+                        [class.has-error]="editErrors()['imageUrl']" />
+                      @if (editErrors()['imageUrl']) { <span class="admin-error">{{ editErrors()['imageUrl'] }}</span> }
+                    </div>
+
+                    @if (editForm.imageUrl) {
+                      <div class="admin-img-preview">
+                        <img [src]="editForm.imageUrl" alt="Vista previa" (error)="imgError($event)" />
+                      </div>
+                    }
+                  </div>
+
+                  <button class="admin-submit-btn" [disabled]="editSaving()" (click)="submitEdit(p.id!)">
+                    {{ editSaving() ? 'Guardando…' : 'Guardar cambios' }}
+                  </button>
+                </div>
+              }
+
+            </div>
+          }
+        </div>
+      }
     </div>
   }
 

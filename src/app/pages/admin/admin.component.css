@@ -5,7 +5,7 @@
 .admin-badge { background: #1a1a10; border: 1px solid #3a3a00; color: #bbbb00; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; padding: 4px 12px; border-radius: 999px; flex-shrink: 0; }
 
 /* Tabs */
-.admin-tabs { display: flex; gap: 6px; border-bottom: 1px solid #1a1a1a; margin-bottom: 28px; }
+.admin-tabs { display: flex; gap: 6px; border-bottom: 1px solid #1a1a1a; margin-bottom: 28px; flex-wrap: wrap; }
 .admin-tab { background: transparent; border: none; border-bottom: 2px solid transparent; color: #555; padding: 12px 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; margin-bottom: -1px; }
 .admin-tab:hover { color: #aaa; }
 .admin-tab.is-active { color: #fff; border-bottom-color: #fff; }
@@ -43,6 +43,22 @@
 .admin-stock-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; flex-shrink: 0; }
 .in-stock { background: #0a1a0a; color: #44bb44; border: 1px solid #1a3a1a; }
 .no-stock { background: #1a0a0a; color: #cc4444; border: 1px solid #3a1a1a; }
+
+/* ─── Edición section ─── */
+.edit-section { display: flex; flex-direction: column; gap: 16px; }
+.edit-list { display: flex; flex-direction: column; gap: 10px; }
+.edit-card { background: #111; border: 1px solid #1e1e1e; border-radius: 14px; overflow: hidden; transition: border-color 0.2s; }
+.edit-card.is-open { border-color: #2a2a2a; }
+.edit-card-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; flex-wrap: wrap; }
+.edit-card-actions { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
+.edit-btn { display: flex; align-items: center; gap: 6px; background: #1a1a1a; border: 1px solid #2a2a2a; color: #ccc; font-size: 0.78rem; font-weight: 700; padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+.edit-btn:hover:not(:disabled) { border-color: #444; color: #fff; }
+.edit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.edit-btn--cancel { color: #999; }
+.edit-btn--danger { border-color: #3a1a1a; color: #ee7777; }
+.edit-btn--danger:hover:not(:disabled) { border-color: #cc4444; color: #ff9999; }
+.edit-card-form { border-top: 1px solid #1a1a1a; padding: 20px 16px; display: flex; flex-direction: column; gap: 20px; }
+
 /* ─── Orders section ─── */
 .orders-section { display: flex; flex-direction: column; gap: 20px; }
 
@@ -147,4 +163,6 @@
   .order-date { display: none; }
   .order-items-head, .order-item-row { grid-template-columns: 1fr auto auto; }
   .order-items-head span:nth-child(2), .oi-val:nth-child(2) { display: none; }
+  .edit-card-head { flex-wrap: wrap; }
+  .edit-card-actions { width: 100%; margin-left: 0; }
 }
